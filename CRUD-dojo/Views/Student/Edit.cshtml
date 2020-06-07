@@ -1,0 +1,13 @@
+﻿@model Student
+
+@{
+    ViewData["Title"] = "Edit student";
+}
+
+
+<form method="post">
+    <button asp-controller="Student" asp-action="Edit">Click me! / Edit student</button>
+    <input type="text" asp-for="FirstName" value="@Model.FirstName"/>
+    <input type="text" asp-for="LastName" value="@Model.LastName"/>
+    <input type="text" asp-for="Age" value="@Model.Age"/>
+</form>
