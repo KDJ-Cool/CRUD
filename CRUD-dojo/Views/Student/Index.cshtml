@@ -1,18 +1,21 @@
 ﻿@model List<Student>
 
-@{
-    ViewData["Title"] = "Student List";
-}
+
+@ViewData["Title"]
+@ViewData["Role"].ToString()
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-
-@Html.ActionLink("Create1", "Create", "Student", null)
-<a href="@Url.Action("Create", "Student")">Create2</a>
-<a asp-controller="Student" asp-action="Create">Create3</a>
+@if ((Roles) ViewData["Role"] == Roles.Admin)
+{
+    @Html.ActionLink("Create1", "Create", "Student", null)
+    <a href="@Url.Action("Create", "Student")">Create2</a>
+    <a asp-controller="Student" asp-action="Create">Create3</a>
+}
+    
 
 <table>
     <tr>
@@ -27,7 +30,12 @@
             <td>@student.FirstName</td>
             <td>@student.LastName</td>
             <td>@student.Age</td>
-            <td><a asp-controller="Student" asp-action="Edit" asp-route-id="@student.Id">Edit</a></td>
+            @if ((Roles)ViewData["Role"] == Roles.Admin)
+            {
+                <td><a asp-controller="Student" asp-action="Edit" asp-route-id="@student.Id">Edit</a></td>
+
+            }
+
         </tr>
     }
 

@@ -1,5 +1,9 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.Json;
 using CRUD_dojo.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRUD_dojo.Controllers
@@ -12,6 +16,20 @@ namespace CRUD_dojo.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            ViewData["Title"] = "Students List";
+            
+
+            if (HttpContext.Session.GetString("activeUser") == null)
+            {
+                return RedirectToAction("Login", "Student");
+            }
+
+            var userAsJson = HttpContext.Session.GetString("activeUser");
+            var activeUser = JsonSerializer.Deserialize<User>(userAsJson);
+            ViewData["Role"] = activeUser.Role;
+
+            Response.Cookies.Append("MyCookie", "MyCookieValue");
+
             return View(_inMemory.Students);
         }
 
@@ -54,6 +72,34 @@ namespace CRUD_dojo.Controllers
         public IActionResult Default(int id)
         {
             return RedirectToAction("Index", "Student");
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(User user)
+        {
+            if (_inMemory.IsValid(user))
+            {
+                var userAsJson = JsonSerializer.Serialize(user);
+                HttpContext.Session.SetString("activeUser", userAsJson);
+
+                return RedirectToAction("Index", "Student");
+            }
+
+            return View();
+        }
+
+        public IActionResult Logout()
+        {
+            // HttpContext.Session.Remove("activeUser");
+            Response.Cookies.Delete("MyCookie");
+            HttpContext.Session.Clear(); // remove all keys from session
+
+            return RedirectToAction("Login", "Student");
         }
     }
 }

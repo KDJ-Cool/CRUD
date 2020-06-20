@@ -19,5 +19,22 @@ namespace CRUD_dojo.Controllers
             Students.Add(new Student(2, "Dominik", "Starzyk", 21));
             Students.Add(new Student(3, "Agnieszka", "Koszany", 18));
         }
+
+        public bool IsValid(User user)
+        {
+            if (user.Name == "1") // Check in Database if user exists- simplified AF
+            {
+                user.Role = Roles.User;
+                return true;
+            }
+
+            if (user.Name == "2")
+            {
+                user.Role = Roles.Admin;
+                return true;
+            }
+
+            return false;
+        }
     }
 }

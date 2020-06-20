@@ -24,6 +24,11 @@ namespace CRUD_dojo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".Dojo.Session";
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +51,7 @@ namespace CRUD_dojo
 
             app.UseAuthorization();
 
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
